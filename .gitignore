@@ -1,0 +1,31 @@
+# Terraform state file
+*.tfstate
+*.tfstate.backup
+
+# Terraform provider storage
+.terraform/
+
+# Vagrant folders
+.vagrant/
+
+# K3s node token (generated secret, recreated on each apply)
+.k3s-node-token
+
+# SSH tunnel PID file
+.k3s-tunnel-pid
+
+# SSH private keys written by Terraform for local-exec commands
+.ssh-master-key
+.ssh-worker-*-key
+
+# Log files
+*.log
+apply.log
+
+# VS Code
+.vscode/
+
+# IDE
+.idea/
+*.swp
+*.swo
