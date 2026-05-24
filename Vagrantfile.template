@@ -1,0 +1,22 @@
+# This Vagrantfile template will be instantiated by Terraform for each K8s node
+
+Vagrant.configure("2") do |config|
+  config.vm.box = "${vagrant_box}"
+
+  # Node configuration
+  config.vm.hostname = "${hostname}"
+
+  config.vm.provider "virtualbox" do |vb|
+    vb.name = "${hostname}"
+    vb.memory = "${memory}"
+    vb.cpus = "${cpus}"
+  end
+
+  # Network configuration
+  %networks{s}.each do |network|
+    config.vm.network network[:type], network[:options]
+  end
+
+  # SSH key provisioning
+  config.ssh.private_key_path = "~/.ssh/id_rsa"
+end
