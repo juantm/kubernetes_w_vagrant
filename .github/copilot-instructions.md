@@ -60,6 +60,13 @@ kubectl --kubeconfig ~/.kube/k3s-config <command>
 - **Provisioning scripts** use `set -ex` (fail-fast) and are uploaded to `/tmp` then executed with `sudo bash`.
 - **OpenSpec workflow**: This repo uses OpenSpec (`openspec/`). Use the openspec skills for proposing, exploring, and applying changes.
 
+## Pitfalls (learned from debugging)
+
+- **`ssh_config[0].private_key` returns raw PEM content**, not a file path. You cannot pass it to `ssh -i` in a `local-exec` command — write it to a file first (as done in `k3s.tf` with `.ssh-master-key` / `.ssh-worker-N-key`).
+- **`sudo` strips environment variables**. When passing `K3S_URL` or `K3S_TOKEN` to a `sudo` command, use `sudo env VAR=value ...` (as done for worker install in `k3s.tf`).
+- **`~` does not expand inside double-quoted parameter defaults** (`"${VAR:-~/.kube/k3s-config}"` keeps `~` literal). Use `$HOME` instead (as done in `scripts/setup-kubectl.sh`).
+- **`/etc/rancher/k3s/k3s.yaml` is root-owned**. The `vagrant` user cannot `scp` it — use `ssh ... 'sudo cat ...' > local_file` instead (as done in `scripts/setup-kubectl.sh`).
+
 ## Commands
 
 ```bash
